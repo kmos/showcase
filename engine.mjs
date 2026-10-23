@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 function loadAuthors() {
-  const content = readFileSync(join(__dirname, 'deck/src/authors/authors.md'), 'utf8')
+  const content = readFileSync(join(__dirname, 'deck/src/authors/authors.yml'), 'utf8')
   const match = content.match(/^---\n([\s\S]*?)\n---/)
   if (!match) return {}
   const authors = {}
@@ -26,7 +26,7 @@ function loadAuthors() {
 }
 
 function loadIntro() {
-  const content = readFileSync(join(__dirname, 'deck/src/showcase/intro.md'), 'utf8')
+  const content = readFileSync(join(__dirname, 'deck/src/showcase/intro.yml'), 'utf8')
   const match = content.match(/^---\n([\s\S]*?)\n---/)
   if (!match) return {}
   const intro = {}

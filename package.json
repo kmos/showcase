@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "rimraf public && npm run -s deck",
-    "deck": "marp --html -I . -o ./public && ncp assets public/assets",
+    "deck": "marp --html -I deck/src -o ./public",
     "start": "PORT=5001 marp --html -ps deck/src",
     "pdf": "marp --html --pdf"
   },
