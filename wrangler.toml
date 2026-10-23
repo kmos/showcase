@@ -1,0 +1,6 @@
+name = "deck"
+compatibility_date = "2026-01-14"
+
+# Serve static files directly (no Worker code required)
+[assets]
+directory = "./public"
