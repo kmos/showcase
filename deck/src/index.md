@@ -1,7 +1,7 @@
 ---
 theme: debezium
-_class: lead
-paginate: true
+paginate: false
 ---
 
-[Episode #001](./episodes/001/)
+```episodes
+```
