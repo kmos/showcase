@@ -10,6 +10,8 @@ footer: _
 ```episode
 number: 001
 date: October 2026
+day: 27
+youtube: FHR-w3Xdrrk
 light: naros | What's cooking in Debezium?
 regular: aandreakis | A Verified Theoretical Basis for Incremental Snapshots in Debezium
 ```
