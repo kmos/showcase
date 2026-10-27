@@ -83,6 +83,7 @@ function loadAllEpisodes() {
       return ep
     })
     .filter(Boolean)
+    .filter(ep => ep.draft !== 'true')
 }
 
 function mdLinks(text) {
@@ -93,8 +94,27 @@ function escHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
+function formatDate(ep) {
+  if (ep.day) return `${ep.date.replace(/\d{4}/, '').trim()} ${ep.day}, ${ep.date.match(/\d{4}/)?.[0]}`
+  return ep.date
+}
+
+function isUpcoming(ep) {
+  const monthYear = ep.date.match(/^(\w+)\s+(\d{4})$/)
+  if (!monthYear) return false
+  const day = ep.day || '1'
+  const parsed = new Date(`${monthYear[1]} ${day}, ${monthYear[2]}`)
+  if (isNaN(parsed)) return false
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+  return parsed > now
+}
+
 function renderPage(episodes, authors, intro) {
   const episodeCards = episodes.map(ep => {
+    const upcoming = isUpcoming(ep)
+    const displayDate = formatDate(ep)
+
     const sessionHtml = ep.sessions.map(s => {
       const author = authors[s.nick]
       if (!author) return ''
@@ -120,23 +140,27 @@ function renderPage(episodes, authors, intro) {
             </div>`
       : ''
 
+    const slidesHtml = upcoming
+      ? `<span class="upcoming-badge">Upcoming</span>`
+      : `<a href="./episodes/${ep.dir}/" class="slides-link" title="View slides">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="3" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                Slides
+              </a>`
+
     return `
-          <div class="episode-card">
+          <div class="episode-card${upcoming ? ' upcoming' : ''}">
             <div class="episode-header">
               <div class="episode-number">
                 <span class="ep-hash">#</span>${ep.number}
               </div>
               <div class="episode-meta">
                 <h2 class="episode-heading">Episode ${ep.number}</h2>
-                <time class="episode-date">${escHtml(ep.date)}</time>
+                <time class="episode-date">${escHtml(displayDate)}</time>
               </div>
-              <a href="./episodes/${ep.dir}/" class="slides-link" title="View slides">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="3" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-                Slides
-              </a>
+              ${slidesHtml}
             </div>${videoHtml}
             <div class="sessions">
 ${sessionHtml}
@@ -354,6 +378,23 @@ ${sessionHtml}
     .episode-date {
       color: var(--dbz-muted);
       font-size: 14px;
+    }
+
+    .episode-card.upcoming {
+      border-color: rgba(240, 168, 40, 0.3);
+    }
+
+    .upcoming-badge {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: rgba(240, 168, 40, 0.15);
+      color: var(--dbz-warn);
+      border: 1px solid var(--dbz-warn);
+      flex-shrink: 0;
     }
 
     .slides-link {
