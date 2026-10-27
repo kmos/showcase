@@ -113,8 +113,15 @@ function renderPage(episodes, authors, intro) {
             </div>`
     }).join('\n')
 
+    const videoHtml = ep.youtube
+      ? `
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/${escHtml(ep.youtube)}" title="Episode ${ep.number}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>`
+      : ''
+
     return `
-          <a href="./episodes/${ep.dir}/" class="episode-card">
+          <div class="episode-card">
             <div class="episode-header">
               <div class="episode-number">
                 <span class="ep-hash">#</span>${ep.number}
@@ -123,15 +130,18 @@ function renderPage(episodes, authors, intro) {
                 <h2 class="episode-heading">Episode ${ep.number}</h2>
                 <time class="episode-date">${escHtml(ep.date)}</time>
               </div>
-              <svg class="play-icon" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M10 8l6 4-6 4V8z" fill="currentColor"/>
-              </svg>
-            </div>
+              <a href="./episodes/${ep.dir}/" class="slides-link" title="View slides">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="3" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                Slides
+              </a>
+            </div>${videoHtml}
             <div class="sessions">
 ${sessionHtml}
             </div>
-          </a>`
+          </div>`
   }).join('\n')
 
   const introText = intro.text
@@ -298,20 +308,10 @@ ${sessionHtml}
     }
 
     .episode-card {
-      display: block;
       background: var(--dbz-surface);
       border: 1px solid var(--dbz-border);
       border-radius: 16px;
       padding: 24px 28px;
-      text-decoration: none;
-      color: inherit;
-      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
-    }
-
-    .episode-card:hover {
-      border-color: var(--dbz-brand);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(145, 212, 67, 0.08);
     }
 
     .episode-header {
@@ -356,16 +356,47 @@ ${sessionHtml}
       font-size: 14px;
     }
 
-    .play-icon {
-      width: 36px;
-      height: 36px;
+    .slides-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       color: var(--dbz-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--dbz-border);
+      background: var(--dbz-surface-2);
+      transition: color 0.2s, border-color 0.2s;
       flex-shrink: 0;
-      transition: color 0.2s;
     }
 
-    .episode-card:hover .play-icon {
+    .slides-link svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .slides-link:hover {
       color: var(--dbz-brand);
+      border-color: var(--dbz-brand);
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--dbz-bg-deep);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
     }
 
     .sessions {

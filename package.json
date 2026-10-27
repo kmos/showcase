@@ -10,11 +10,14 @@
     "deck": "marp --html -I deck/src -o ./public && npm run -s copy-assets && npm run -s build-index",
     "copy-assets": "mkdir -p public/authors/img public/showcase && ncp deck/src/authors/img public/authors/img && ncp deck/src/showcase/showcase.svg public/showcase/showcase.svg",
     "build-index": "node scripts/build-index.mjs",
+    "dev": "npm run build && concurrently -k -n slides,server \"marp --html -w -I deck/src -o ./public\" \"http-server public -p 5001 -c-1\"",
     "start": "PORT=5001 marp --html -ps deck/src",
     "pdf": "marp --html --pdf"
   },
   "devDependencies": {
     "@marp-team/marp-cli": "^4.5.0",
+    "concurrently": "^10.0.6",
+    "http-server": "^14.1.1",
     "ncp": "^2.0.0",
     "rimraf": "^6.1.2"
   },
