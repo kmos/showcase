@@ -7,8 +7,9 @@
   },
   "scripts": {
     "build": "rimraf public && npm run -s deck",
-    "deck": "marp --html -I deck/src -o ./public && npm run -s copy-assets",
+    "deck": "marp --html -I deck/src -o ./public && npm run -s copy-assets && npm run -s build-index",
     "copy-assets": "mkdir -p public/authors/img public/showcase && ncp deck/src/authors/img public/authors/img && ncp deck/src/showcase/showcase.svg public/showcase/showcase.svg",
+    "build-index": "node scripts/build-index.mjs",
     "start": "PORT=5001 marp --html -ps deck/src",
     "pdf": "marp --html --pdf"
   },
